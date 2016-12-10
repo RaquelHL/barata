@@ -11,6 +11,7 @@ require("PlayerInput")
 require("CharacterMotor")
 
 require("Food")
+require("BroomIA")
 
 --Outros
 require("Color")
@@ -19,6 +20,7 @@ GameMgr = require("GameManager")
 
 local bump = require("lib.bump")
 local bumpdebug = require("lib.bump_debug")
+Timer = require("lib.hump.timer")
 
 gui = require("lib.gui.gui")
 
@@ -33,36 +35,38 @@ function love.load()
 	GUI = gui()
 	font = love.graphics.getFont()
 
+
 	love.graphics.setBackgroundColor(200, 200, 200)
 
 	barata = GameObject("barata", {Renderer(barataTex), BoxCollider(24,24), CharacterMotor(), PlayerInput()}):newInstance({x = 100, y = 100, sx = 0.5, sy = 0.5})
-	
-	obs = GameObject("asd", {BoxCollider(64, 64)}):newInstance({x = 200, y = 200})
 
 	barata.renderer.offsetX = 12
 	barata.renderer.offsetY = 12
 	barata.renderer.offsetOX = 32
 	barata.renderer.offsetOY = 32
 	
-	food = GameObject("food", {Renderer(foodTex), BoxCollider(16, 16), Food()})
-	
-	
+	GameMgr.init(barata)
 
+
+	food = GameObject("food", {Renderer(foodTex), BoxCollider(16, 16), Food()})
+	broom = GameObject("v", {Renderer(broomTex), BoxCollider(50,50), BroomIA()})
 
 	testScene = Scene()
 	testScene:addGO(barata)
-	testScene:addGO(obs)
+
+	testScene:addGO(broom:newInstance({x = 300, y = 500, o = 150, sy = 0.5}))
+	testScene:addGO(broom:newInstance({x = 10, y = 400, o = 150, sy = 0.5}))
+	testScene:addGO(broom:newInstance({x = 500, y = 100, o = 150, sy = 0.5}))
+	testScene:addGO(broom:newInstance({x = 700, y = 300, o = 150, sy = 0.5}))
 
 	for i=1,20 do
 		testScene:addGO(food:newInstance({x = love.math.random()*love.graphics.getWidth(), y = love.math.random() * love.graphics.getHeight()}))		
 	end
-
-	GameMgr.init()
 end
 
 function love.update(dt)
-	--GameMgr.update()
 	testScene:update(dt)
+	Timer.update(dt)
 end
 
 function love:draw()
@@ -78,6 +82,7 @@ end
 function initResources()
 	barataTex = ResourceMgr.get("texture", "barata.png")
 	foodTex = ResourceMgr.get("texture", "food.png")
+	broomTex = ResourceMgr.get("texture", "broom.png")
 end
 
 function initExtraPhysics()	--Achar um lugar pra por isso
@@ -106,6 +111,10 @@ function initExtraPhysics()	--Achar um lugar pra por isso
 
 	physics:addResponse("slope", slope)
 
+end
+
+function dist(x1, y1, x2, y2)
+	return math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2))
 end
 
 --Print para depurar valores contínuos

@@ -13,8 +13,8 @@ local function new()
 	cm.name = "motor"
 
 	cm.isAlive = true
-	cm.maxSpeed = 275
-	cm.accSpeed = 50
+	cm.maxSpeed = 375
+	cm.accSpeed = 100
 	cm.turnSpeed = 5
 
 	cm.fwdSpeed = 0
@@ -31,11 +31,13 @@ function CharacterMotor:init()
 end
 
 function CharacterMotor:update(dt)
-
-	self.speedX = (math.sin(self.go.transform.o)) * self.fwdSpeed * dt;
-    self.speedY = -(math.cos(self.go.transform.o)) * self.fwdSpeed * dt;
+	if not self.isAlive then
+		return
+	end
+	self.speedX = (math.sin(self.go.transform.o)) * self.fwdSpeed * dt
+    self.speedY = -(math.cos(self.go.transform.o)) * self.fwdSpeed * dt
 	local nX, nY, cols, n = physics:move(self.go, self.go.transform.x + self.speedX, self.go.transform.y + self.speedY, function(a, b)
-		if(b.food) then
+		if(b.food or b.enemy) then
 			return "cross"
 		else
 			return "slide"
@@ -63,13 +65,16 @@ end
 
 function CharacterMotor:turn(dir)
 	self.go.transform.o = self.go.transform.o + (dir * self.turnSpeed)
-	
 end
 
 function CharacterMotor:move(dir)
 	self.fwdSpeed = math.min(self.fwdSpeed + (dir * self.accSpeed), self.maxSpeed)
     --modelPosition += Vector3.Forward * speedz;
     --modelPosition += Vector3.Left * speedx;
+end
+
+function CharacterMotor:die()
+	self.isAlive = false
 end
 
 function CharacterMotor:clone()
