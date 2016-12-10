@@ -16,6 +16,8 @@ local function new(name, components)
 	local go = {}
 	setmetatable(go, GameObject)
 
+	go.toDestroy = false
+
 	go.isInstance = false
 	go.nInstances = 0	--Por enquanto só pra dar nome pras instancias
 	go.name = name or "GameObject"
@@ -61,6 +63,18 @@ function GameObject:init()
 		end
 	end
 
+end
+
+function GameObject:destroy()
+	self.toDestroy = true
+	for k,c in pairs(self.components) do 	
+		if c.destroy then
+			c:destroy()
+		end
+	end
+	for k,ch in pairs(self.children) do
+		ch:destroy()
+	end
 end
 
 function GameObject:update(dt)

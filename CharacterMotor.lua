@@ -34,7 +34,20 @@ function CharacterMotor:update(dt)
 
 	self.speedX = (math.sin(self.go.transform.o)) * self.fwdSpeed * dt;
     self.speedY = -(math.cos(self.go.transform.o)) * self.fwdSpeed * dt;
-	local nX, nY, cols, n = physics:move(self.go, self.go.transform.x + self.speedX, self.go.transform.y + self.speedY)
+	local nX, nY, cols, n = physics:move(self.go, self.go.transform.x + self.speedX, self.go.transform.y + self.speedY, function(a, b)
+		if(b.food) then
+			return "cross"
+		else
+			return "slide"
+		end
+	end)
+
+	for k,v in pairs(cols) do
+		if v.other.food then
+			GameMgr.addScore(10)
+			v.other:destroy()
+		end
+	end
 	
 	self.go.transform:translate(nX, nY)
 

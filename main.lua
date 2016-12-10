@@ -10,12 +10,17 @@ require("SpriteAnimator")
 require("PlayerInput")
 require("CharacterMotor")
 
+require("Food")
+
 --Outros
 require("Color")
 ResourceMgr = require("ResourceManager")
+GameMgr = require("GameManager")
 
 local bump = require("lib.bump")
 local bumpdebug = require("lib.bump_debug")
+
+gui = require("lib.gui.gui")
 
 local pprintList = {}
 
@@ -24,6 +29,9 @@ function love.load()
 	physics = bump.newWorld(168)	--Tem que colocar isso em algum outro lugar	
 	initExtraPhysics()
 	initResources()	
+
+	GUI = gui()
+	font = love.graphics.getFont()
 
 	love.graphics.setBackgroundColor(200, 200, 200)
 
@@ -36,22 +44,31 @@ function love.load()
 	barata.renderer.offsetOX = 32
 	barata.renderer.offsetOY = 32
 	
+	food = GameObject("food", {Renderer(foodTex), BoxCollider(16, 16), Food()})
+	
+	
+
+
 	testScene = Scene()
 	testScene:addGO(barata)
 	testScene:addGO(obs)
 
+	for i=1,20 do
+		testScene:addGO(food:newInstance({x = love.math.random()*love.graphics.getWidth(), y = love.math.random() * love.graphics.getHeight()}))		
+	end
 
-
+	GameMgr.init()
 end
 
 function love.update(dt)
+	--GameMgr.update()
 	testScene:update(dt)
 end
 
 function love:draw()
 	testScene:draw()
 
-
+	GameMgr.draw()
 
 	bumpdebug.draw(physics)
 
@@ -60,6 +77,7 @@ end
 
 function initResources()
 	barataTex = ResourceMgr.get("texture", "barata.png")
+	foodTex = ResourceMgr.get("texture", "food.png")
 end
 
 function initExtraPhysics()	--Achar um lugar pra por isso

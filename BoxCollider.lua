@@ -50,6 +50,10 @@ function BoxCollider:init()
 	physics:add(self.go, self.go.transform.x + self.offsetX, self.go.transform.y + self.offsetY, self.w, self.h)
 end
 
+function BoxCollider:destroy()
+	physics:remove(self.go)
+end
+
 function BoxCollider:draw()
 	if self.go.debugCollider then
 		love.graphics.setColor(220, 50, 220)
