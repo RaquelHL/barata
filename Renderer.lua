@@ -16,6 +16,8 @@ local function new(texture, color)
 
 	r.offsetX = 0
 	r.offsetY = 0
+	r.offsetOX = 0
+	r.offsetOY = 0
 	r.mirror = false
 
 	r.color = color or Color(255)
@@ -43,7 +45,7 @@ function Renderer:draw()
 	if(self.quad) then
 		love.graphics.draw(self.texture, self.quad, math.floor(posX), math.floor(self.go.transform.y + self.offsetY), self.go.transform.o, scaleX, self.go.transform.sy)
 	else
-		love.graphics.draw(self.texture, posX, self.go.transform.y, self.go.transform.o, scaleX, self.go.transform.sy)
+		love.graphics.draw(self.texture, posX, self.go.transform.y + self.offsetY, self.go.transform.o, scaleX, self.go.transform.sy, self.offsetOX, self.offsetOY)
 	end
 end
 

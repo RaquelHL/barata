@@ -22,18 +22,44 @@ local pprintList = {}
 function love.load()
 
 	physics = bump.newWorld(168)	--Tem que colocar isso em algum outro lugar	
+	initExtraPhysics()
+	initResources()	
+
+	love.graphics.setBackgroundColor(200, 200, 200)
+
+	barata = GameObject("barata", {Renderer(barataTex), BoxCollider(24,24), CharacterMotor(), PlayerInput()}):newInstance({x = 100, y = 100, sx = 0.5, sy = 0.5})
 	
+	obs = GameObject("asd", {BoxCollider(64, 64)}):newInstance({x = 200, y = 200})
+
+	barata.renderer.offsetX = 12
+	barata.renderer.offsetY = 12
+	barata.renderer.offsetOX = 32
+	barata.renderer.offsetOY = 32
 	
+	testScene = Scene()
+	testScene:addGO(barata)
+	testScene:addGO(obs)
+
+
+
 end
 
 function love.update(dt)
+	testScene:update(dt)
 end
 
 function love:draw()
+	testScene:draw()
 
-	--bumpdebug.draw(physics)
+
+
+	bumpdebug.draw(physics)
 
 	pprintDraw()
+end
+
+function initResources()
+	barataTex = ResourceMgr.get("texture", "barata.png")
 end
 
 function initExtraPhysics()	--Achar um lugar pra por isso
