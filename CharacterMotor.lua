@@ -56,6 +56,9 @@ function CharacterMotor:update(dt)
 	self.fwdSpeed = self.fwdSpeed * 0.8
 	if(self.fwdSpeed<10)then
 		self.fwdSpeed = 0
+		self.go.animator:setAnim("idle")
+	else
+		self.go.animator:setAnim("walk")
 	end
 
 	pprint("fwdSpeed = "..self.fwdSpeed)
@@ -74,6 +77,7 @@ function CharacterMotor:move(dir)
 end
 
 function CharacterMotor:die()
+	self.go.animator:setAnim("die")
 	self.isAlive = false
 end
 

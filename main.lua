@@ -12,6 +12,8 @@ require("CharacterMotor")
 
 require("Food")
 require("BroomIA")
+require("ChineloIA")
+require("ChineloLauncher")
 
 --Outros
 require("Color")
@@ -38,7 +40,7 @@ function love.load()
 
 	love.graphics.setBackgroundColor(200, 200, 200)
 
-	barata = GameObject("barata", {Renderer(barataTex), BoxCollider(24,24), CharacterMotor(), PlayerInput()}):newInstance({x = 100, y = 100, sx = 0.5, sy = 0.5})
+	barata = GameObject("barata", {Renderer(), SpriteAnimator("walk"), BoxCollider(24,24), CharacterMotor(), PlayerInput()}):newInstance({x = 100, y = 100, sx = 0.5, sy = 0.5})
 
 	barata.renderer.offsetX = 12
 	barata.renderer.offsetY = 12
@@ -47,9 +49,10 @@ function love.load()
 	
 	GameMgr.init(barata)
 
-
 	food = GameObject("food", {Renderer(foodTex), BoxCollider(16, 16), Food()})
 	broom = GameObject("v", {Renderer(broomTex), BoxCollider(50,50), BroomIA()})
+
+	chinelo = GameObject("c", {ChineloLauncher()})
 
 	testScene = Scene()
 	testScene:addGO(barata)
@@ -58,6 +61,8 @@ function love.load()
 	testScene:addGO(broom:newInstance({x = 10, y = 400, o = 150, sy = 0.5}))
 	testScene:addGO(broom:newInstance({x = 500, y = 100, o = 150, sy = 0.5}))
 	testScene:addGO(broom:newInstance({x = 700, y = 300, o = 150, sy = 0.5}))
+
+	testScene:addGO(chinelo:newInstance({x = 200, y = 200, o = 2}))
 
 	for i=1,20 do
 		testScene:addGO(food:newInstance({x = love.math.random()*love.graphics.getWidth(), y = love.math.random() * love.graphics.getHeight()}))		
@@ -80,9 +85,11 @@ function love:draw()
 end
 
 function initResources()
-	barataTex = ResourceMgr.get("texture", "barata.png")
 	foodTex = ResourceMgr.get("texture", "food.png")
 	broomTex = ResourceMgr.get("texture", "broom.png")
+	chineloTex = ResourceMgr.get("texture", "chinelo.png")
+
+	ResourceMgr.add("animsheet", "barataSheet")
 end
 
 function initExtraPhysics()	--Achar um lugar pra por isso

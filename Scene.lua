@@ -34,6 +34,7 @@ end
 
 function Scene:addGO(go)
 	assert(go.isInstance, "GameObject needs to be an instance")
+	go.scene = self
 	self.gameObjects[#self.gameObjects+1] = go
 
 end

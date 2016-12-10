@@ -25,7 +25,7 @@ function SpriteAnimator:init()
 	assert(self.go.renderer, self.name.." needs a renderer component")
 	
 	if (self.anim) then
-		self:setAnim(self.anim.name)
+		--self:setAnim(self.anim.name)
 	end
 end
 
@@ -52,7 +52,7 @@ function SpriteAnimator:setAnim(name)
 	if (self.go) then
 		self.go.renderer.texture = self.anim.texture
 		self.go.renderer.quad = self.anim.frames[1].quad
-		if (self.go.collider) then
+		if (self.go.collider and self.anim.colBox) then
 			self.go.collider:updateRect(0,0,self.anim.colBox.w, self.anim.colBox.h)
 			self.go.renderer.offsetX = self.anim.offsetX
 			self.go.renderer.offsetY = self.anim.offsetY

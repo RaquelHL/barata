@@ -43,7 +43,7 @@ function Renderer:draw()
 		end
 	end
 	if(self.quad) then
-		love.graphics.draw(self.texture, self.quad, math.floor(posX), math.floor(self.go.transform.y + self.offsetY), self.go.transform.o, scaleX, self.go.transform.sy)
+		love.graphics.draw(self.texture, self.quad, math.floor(posX), math.floor(self.go.transform.y + self.offsetY), self.go.transform.o, scaleX, self.go.transform.sy, self.offsetOX, self.offsetOY)
 	else
 		love.graphics.draw(self.texture, posX, self.go.transform.y + self.offsetY, self.go.transform.o, scaleX, self.go.transform.sy, self.offsetOX, self.offsetOY)
 	end

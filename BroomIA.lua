@@ -48,7 +48,7 @@ function BroomIA:attack()
 		local actualX, actualY, cols, len = physics:check(self.go)
 		for k,v in pairs(cols) do
 			if(v.other == self.barata)then
-				self.barata.motor.isAlive = false
+				self.barata.motor:die()
 				pprint("morreu","a")
 			end
 		end
