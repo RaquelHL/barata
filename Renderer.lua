@@ -13,7 +13,13 @@ local function new(texture, color, args)
 
 	r.isComponent = true
 	r.name = "renderer"
-	r.texture = texture
+	if (type(texture)== "userdata") then
+		r.texture = texture
+	else
+		if (type(texture) == "string") then
+			r.texture = ResourceMgr.get("texture", texture)
+		end
+	end
 
 	r.offsetX = args.offsetX or 0
 	r.offsetY = args.offsetY or 0

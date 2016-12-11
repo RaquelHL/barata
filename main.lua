@@ -58,9 +58,6 @@ function love.load()
 	barata.renderer.offsetOX = 32
 	barata.renderer.offsetOY = 32
 	
-	barata.particle.ParticleSystem:setSpin(1,2)
-	barata.particle.ParticleSystem:setAreaSpread("uniform", 2,2)
-
 	GameMgr.init(barata)
 
 	pizza = GameObject("pizza", {Renderer(), SpriteAnimator("pizza"), BoxCollider(64, 64), Food(2)})
@@ -70,18 +67,21 @@ function love.load()
 	chinelo = GameObject("c", {ChineloLauncher()})
 
 	testScene = Scene()
-	testScene:addGO(barata)
-
-	testScene:addGO(broom:newInstance({x = 300, y = 500, o = 150, sy = 0.5}))
-	testScene:addGO(broom:newInstance({x = 10, y = 400, o = 150, sy = 0.5}))
-	testScene:addGO(broom:newInstance({x = 500, y = 100, o = 150, sy = 0.5}))
-	testScene:addGO(broom:newInstance({x = 700, y = 300, o = 150, sy = 0.5}))
-
+	
 	testScene:addGO(chinelo:newInstance({x = 200, y = 200, o = 2}))
 
 	for i=1,10 do
 		testScene:addGO(pizza:newInstance({x = love.math.random()*love.graphics.getWidth(), y = love.math.random() * love.graphics.getHeight()}))		
 	end
+
+	testScene:addGO(barata)
+
+	
+	testScene:addGO(broom:newInstance({x = 300, y = 500, o = 150, sy = 0.5}))
+	testScene:addGO(broom:newInstance({x = 10, y = 400, o = 150, sy = 0.5}))
+	testScene:addGO(broom:newInstance({x = 500, y = 100, o = 150, sy = 0.5}))
+	testScene:addGO(broom:newInstance({x = 700, y = 300, o = 150, sy = 0.5}))
+
 end
 
 function love.update(dt)
@@ -96,7 +96,7 @@ function love:draw()
 
 	GameMgr.draw()
 
-	bumpdebug.draw(physics)
+	--bumpdebug.draw(physics)
 	pprintDraw()
 end
 
@@ -156,12 +156,12 @@ function pprintDraw()
 	love.graphics.setColor(0, 0, 0)
 	local j = 0
 	for i,v in ipairs(pprintList) do
-		love.graphics.print(v, 10, j*10)
+		love.graphics.print(v, 10,50+ j*10)
 		pprintList[i] = nil
 		j = j + 1
 	end
 	for k,v in pairs(pprintList) do
-		love.graphics.print(v, 10, j*10)
+		love.graphics.print(v, 10,50+ j*10)
 		j = j + 1
 	end
 end

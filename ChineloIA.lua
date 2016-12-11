@@ -11,7 +11,7 @@ local function new()
 	cia.isChineloIA = true
 	cia.name = "enemy"
 
-	cia.speed = 250
+	cia.speed = 300
 
 	return cia
 end
@@ -32,16 +32,15 @@ function ChineloIA:update(dt)
 	self.speedX = (math.sin(self.go.transform.o)) * self.speed * dt
     self.speedY = -(math.cos(self.go.transform.o)) * self.speed * dt
 	local nX, nY, cols, n = physics:move(self.go, self.go.transform.x + self.speedX, self.go.transform.y + self.speedY, function(a, b)
-		if(b.food or b.enemy or b.motor) then
+		
 			return "cross"
-		else 
-			return "slide"
-		end
+		
 	end)
 
 	for k,v in pairs(cols) do
 		if v.other.motor then
 			v.other.motor:die()
+			self.go:destroy()
 		end
 	end
 	

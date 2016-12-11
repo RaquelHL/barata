@@ -33,6 +33,9 @@ function PlayerInput:update(dt)
 	if(love.keyboard.isDown("up"))then
 		self.motor:move(1)	
 	end
+	if(love.keyboard.isDown("down"))then
+		self.motor:move(-1)	
+	end
 end
 
 function PlayerInput:clone()

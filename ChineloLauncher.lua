@@ -11,7 +11,7 @@ local function new(...)
 	cl.isChineloLauncher = true
 	cl.name = "chineloLauncher"
 
-	cl.freq = 0.2
+	cl.freq = 0.8
 	cl.lastChinelo = love.timer.getTime()
 
 	return cl

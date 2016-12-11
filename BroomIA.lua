@@ -40,7 +40,7 @@ end
 
 function BroomIA:attack()
 	self.isAttacking = true
-	Timer.tween(0.2, self.go.transform, {sy = self.barataDist/self.reach}, "in-cubic", function()
+	Timer.tween(0.3, self.go.transform, {sy = self.barataDist/self.reach}, "in-cubic", function()
 		Timer.tween(self.cooldown, self.go.transform, {sy = 0.5}, "out-quad")
 			self.isAttacking = false
 		self:updateCollider()
