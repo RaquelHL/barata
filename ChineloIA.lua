@@ -32,9 +32,9 @@ function ChineloIA:update(dt)
 	self.speedX = (math.sin(self.go.transform.o)) * self.speed * dt
     self.speedY = -(math.cos(self.go.transform.o)) * self.speed * dt
 	local nX, nY, cols, n = physics:move(self.go, self.go.transform.x + self.speedX, self.go.transform.y + self.speedY, function(a, b)
-		if(b.food or b.enemy) then
+		if(b.food or b.enemy or b.motor) then
 			return "cross"
-		else
+		else 
 			return "slide"
 		end
 	end)

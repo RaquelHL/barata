@@ -44,21 +44,32 @@ function CharacterMotor:update(dt)
 		end
 	end)
 
+	local eating = false
 	for k,v in pairs(cols) do
-		if v.other.food then
-			GameMgr.addScore(10)
-			v.other:destroy()
+		if v.other.food  and not eating and self.fwdSpeed == 0 then
+			eating = true
+			if(v.other.food:eat(dt)) then
+			 	GameMgr.addScore(10)
+			 end
 		end
+	end
+
+	if(eating) then
+		self.go.particle:start()
+	else
+		self.go.particle:stop()
 	end
 	
 	self.go.transform:translate(nX, nY)
 
-	self.fwdSpeed = self.fwdSpeed * 0.8
+	self.fwdSpeed = self.fwdSpeed * 0.7
 	if(self.fwdSpeed<10)then
 		self.fwdSpeed = 0
 		self.go.animator:setAnim("idle")
 	else
-		self.go.animator:setAnim("walk")
+		if (self.go.animator.anim.name ~= "walk") then
+			self.go.animator:setAnim("walk")
+		end
 	end
 
 	pprint("fwdSpeed = "..self.fwdSpeed)

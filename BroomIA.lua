@@ -13,7 +13,7 @@ local function new(...)
 
 	bia.reach = 256
 
-	bia.cooldown = 3	--Segundos entre ataques
+	bia.cooldown = 4	--Segundos entre ataques
 	bia.lastAttack = love.timer.getTime()	
 
 	bia.isAttacking = false
@@ -24,7 +24,7 @@ end
 function BroomIA:init()
 	self.barata = GameMgr.getPlayer()
 	
-	self.go.renderer.offsetOX = 37
+	self.go.renderer.offsetOX = self.go.renderer.texture:getWidth()/2
 end
 
 function BroomIA:update(dt)
@@ -41,9 +41,8 @@ end
 function BroomIA:attack()
 	self.isAttacking = true
 	Timer.tween(0.2, self.go.transform, {sy = self.barataDist/self.reach}, "in-cubic", function()
-		Timer.tween(0.5, self.go.transform, {sy = 0.5}, "out-quad", function()
+		Timer.tween(self.cooldown, self.go.transform, {sy = 0.5}, "out-quad")
 			self.isAttacking = false
-		end)
 		self:updateCollider()
 		local actualX, actualY, cols, len = physics:check(self.go)
 		for k,v in pairs(cols) do

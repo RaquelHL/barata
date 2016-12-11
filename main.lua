@@ -9,6 +9,7 @@ require("BoxCollider")
 require("SpriteAnimator")
 require("PlayerInput")
 require("CharacterMotor")
+require("Particle")
 
 require("Food")
 require("BroomIA")
@@ -37,19 +38,33 @@ function love.load()
 	GUI = gui()
 	font = love.graphics.getFont()
 
+	local numTilesX =  love.graphics.getWidth() / tileTex:getWidth() * 2
+    local numTilesY =  love.graphics.getHeight() / tileTex:getHeight() * 2
+    menuBgBatch = love.graphics.newSpriteBatch(tileTex, numTiles, "static")
+    for i=0,numTilesX do
+        for j=0,numTilesY do
+            sPosX = i*tileTex:getWidth()/2
+            sPosY = j*tileTex:getHeight()/2
+            menuBgBatch:add(sPosX,sPosY,0,0.5,0.5)
+        end
+    end
 
 	love.graphics.setBackgroundColor(200, 200, 200)
 
-	barata = GameObject("barata", {Renderer(), SpriteAnimator("walk"), BoxCollider(24,24), CharacterMotor(), PlayerInput()}):newInstance({x = 100, y = 100, sx = 0.5, sy = 0.5})
+	barata = GameObject("barata", {Renderer(), SpriteAnimator("walk"), BoxCollider(24,24), CharacterMotor(), PlayerInput(), Particle(foodParticle)}):newInstance({x = 100, y = 100, sx = 0.5, sy = 0.5})
 
 	barata.renderer.offsetX = 12
 	barata.renderer.offsetY = 12
 	barata.renderer.offsetOX = 32
 	barata.renderer.offsetOY = 32
 	
+	barata.particle.ParticleSystem:setSpin(1,2)
+	barata.particle.ParticleSystem:setAreaSpread("uniform", 2,2)
+
 	GameMgr.init(barata)
 
-	food = GameObject("food", {Renderer(foodTex), BoxCollider(16, 16), Food()})
+	pizza = GameObject("pizza", {Renderer(), SpriteAnimator("pizza"), BoxCollider(64, 64), Food(2)})
+	
 	broom = GameObject("v", {Renderer(broomTex), BoxCollider(50,50), BroomIA()})
 
 	chinelo = GameObject("c", {ChineloLauncher()})
@@ -64,8 +79,8 @@ function love.load()
 
 	testScene:addGO(chinelo:newInstance({x = 200, y = 200, o = 2}))
 
-	for i=1,20 do
-		testScene:addGO(food:newInstance({x = love.math.random()*love.graphics.getWidth(), y = love.math.random() * love.graphics.getHeight()}))		
+	for i=1,10 do
+		testScene:addGO(pizza:newInstance({x = love.math.random()*love.graphics.getWidth(), y = love.math.random() * love.graphics.getHeight()}))		
 	end
 end
 
@@ -75,21 +90,25 @@ function love.update(dt)
 end
 
 function love:draw()
+	love.graphics.setColor(255,255,255)
+	love.graphics.draw(menuBgBatch, 0, 0, 0)
 	testScene:draw()
 
 	GameMgr.draw()
 
 	bumpdebug.draw(physics)
-
 	pprintDraw()
 end
 
 function initResources()
-	foodTex = ResourceMgr.get("texture", "food.png")
-	broomTex = ResourceMgr.get("texture", "broom.png")
+	tileTex = ResourceMgr.get("texture", "ladrilho2.png")
+	foodParticle = ResourceMgr.get("texture", "foodParticle.png")
+	foodTex = ResourceMgr.get("texture", "pizza.png")
+	broomTex = ResourceMgr.get("texture", "vassoura2.png")
 	chineloTex = ResourceMgr.get("texture", "chinelo.png")
 
-	ResourceMgr.add("animsheet", "barataSheet")
+	ResourceMgr.add("animsheet", "barataSheet2")
+	ResourceMgr.add("animsheet", "pizza")
 end
 
 function initExtraPhysics()	--Achar um lugar pra por isso

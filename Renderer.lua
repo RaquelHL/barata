@@ -6,19 +6,20 @@
 Renderer = {}
 Renderer.__index = Renderer
 
-local function new(texture, color)
+local function new(texture, color, args)
 	local r = {}
+	args = args or {}
 	setmetatable(r, Renderer)
 
 	r.isComponent = true
 	r.name = "renderer"
 	r.texture = texture
 
-	r.offsetX = 0
-	r.offsetY = 0
-	r.offsetOX = 0
-	r.offsetOY = 0
-	r.mirror = false
+	r.offsetX = args.offsetX or 0
+	r.offsetY = args.offsetY or 0
+	r.offsetOX = args.offsetOX or 0
+	r.offsetOY = args.offsetOY or 0
+	r.mirror = args.mirror or false
 
 	r.color = color or Color(255)
 
@@ -49,8 +50,13 @@ function Renderer:draw()
 	end
 end
 
+function Renderer:centerTexture()
+	self.offsetX = -self.texture:getWidth()/2
+	self.offsetY = -self.texture:getHeight()/2
+end
+
 function Renderer:clone()
-	return new(self.texture, self.color)
+	return new(self.texture, self.color, {offsetX = self.offsetX, offsetY = offsetY, offsetOX = self.offsetOX, offsetOY = self.offsetOY, mirror = self.mirror})
 end
 
 
