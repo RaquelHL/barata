@@ -41,6 +41,10 @@ end
 
 function Scene:loadMap(name)
 	map = require("maps."..name)
+	if(map.backgroundcolor) then
+		love.graphics.setBackgroundColor(map.backgroundcolor)
+	end
+	love.window.setMode(map.width*map.tilewidth, map.height*map.tileheight, flags)
 	map.tiles = {}
 
 	for i,ts in ipairs(map.tilesets) do
@@ -72,7 +76,7 @@ function Scene:loadMap(name)
 	end
 
 	for k,l in pairs(map.layers) do
-		if (l.properties.static) then 	--Estatico, nunca muda. Poe tudo num spriteBatch em um gameObject
+		if (l.type == "tilelayer") then 	--Estatico, nunca muda. Poe tudo num spriteBatch em um gameObject
 			local layerGO = GameObject(l.name)	 
 			local batchs = {}	--Precisa de um spritebatch para cada tileset
 		    local curTile = 1
@@ -83,7 +87,7 @@ function Scene:loadMap(name)
 		    local colY = 0
 		    local colW = 0
 		    local colCount = 0
-
+		    print("criando camada "..l.name)
 		    for j=0,map.height-1 do
 		    	for i=0,map.width-1 do
 		    		local closeCollider = false
@@ -151,11 +155,69 @@ function Scene:loadMap(name)
 		    self:addGO(layerGO:newInstance())
 
 		end
+		if (l.type == "objectgroup") then
+			if(l.name == "obstacles")then
+				for k,v in pairs(l.objects) do
+					local obj = GameObject(v.name.."("..v.id..")", {Renderer(map.tilesets[getTileSet(v.gid)].texture)})
+					obj.renderer.quad = map.tiles[v.gid]
+					v.rad = math.rad(v.rotation)
+					if(v.properties.obstacle) then
+						local cW, cH, cX, cY = v.width, v.height, 0, 0
+						if(v.rotation == 90) then
+							cX = -v.height
+							cW = v.height
+							cH = v.width
+						end
+						if(v.rotation == 180) then
+							cX = -v.width
+							cY = -v.height
+						end
+						if(v.rotation == 270) then
+							cY = -v.width
+							cW = v.height
+							cH = v.width
+						end
+						obj:addComponent(BoxCollider(cW, cH, cX, cY))
+					end
+					self:addGO(obj:newInstance({x = v.x, y = v.y, o = v.rad}))
+				end
+			end
+			if(l.name == "player") then
+				barata = GameObject("barata", {Renderer(), SpriteAnimator("walk"), BoxCollider(24,24), CharacterMotor(), PlayerInput(), Particle(foodParticle)}):newInstance({x = l.objects[1].x, y = l.objects[1].y, sx = 0.5, sy = 0.5})
+
+				barata.renderer.offsetX = 12
+				barata.renderer.offsetY = 12
+				barata.renderer.offsetOX = 32
+				barata.renderer.offsetOY = 32
+				
+				GameMgr.init(barata)
+
+				self:addGO(barata)
+			end
+			if(l.name == "food") then
+				local pizza = GameObject("pizza", {Renderer(), SpriteAnimator("pizza"), BoxCollider(88, 114, -10, -20), Food(3)})
+				local maca = GameObject("maca", {Renderer(), SpriteAnimator("maca"), BoxCollider(60, 87, -15, -20), Food(2)})
+
+				for k,v in pairs(l.objects) do
+					if (map.tilesets[getTileSet(v.gid)].name == "pizza") then
+						self:addGO(pizza:newInstance({x = v.x, y = v.y}))		
+					else 
+						if(map.tilesets[getTileSet(v.gid)].name == "maca") then
+							self:addGO(maca:newInstance({x = v.x, y = v.y}))			
+						end
+					end
+				end
+				
+			end
+
+			if(l.name == "vassouras") then
+				broom = GameObject("v", {Renderer(broomTex), BoxCollider(50,50), BroomIA()})
+				for k,v in pairs(l.objects) do
+					self:addGO(broom:newInstance({x = v.x, y = v.y, sy = 0.5}))
+				end
+			end
+		end
 	end
-	if(map.backgroundcolor) then
-		love.graphics.setBackgroundColor(map.backgroundcolor)
-	end
-	love.window.setMode(map.width*map.tilewidth, map.height*map.tileheight, flags)
 end
 
 setmetatable(Scene, {__call = function(_, ...) return new(...) end})

@@ -17,7 +17,7 @@ local function new()
 	cm.maxLife = 3
 	cm.life = cm.maxLife
 	cm.maxSpeed = 375
-	cm.accSpeed = 100
+	cm.accSpeed = 200
 	cm.turnSpeed = 5
 
 	cm.fwdSpeed = 0
@@ -112,7 +112,6 @@ function CharacterMotor:die()
 		self.go.animator:setAnim("die")
 		self.go.particle:stop()
 		self.isAlive = false
-
 	end
 end
 
