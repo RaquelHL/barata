@@ -24,6 +24,7 @@ GameMgr = require("GameManager")
 local bump = require("lib.bump")
 local bumpdebug = require("lib.bump_debug")
 Timer = require("lib.hump.timer")
+Camera = require "lib.hump.camera"
 
 gui = require("lib.gui.gui")
 
@@ -43,24 +44,38 @@ function love.load()
 	chinelo = GameObject("c", {ChineloLauncher()})
 
 	testScene = Scene()
-	testScene:loadMap("level1")	
+	map = testScene:loadMap("level1")	
 	testScene:addGO(chinelo:newInstance({x = 200, y = 200, o = 2}))
+
+	barata = GameMgr:getPlayer()
+
+	camera = Camera(barata.transform.x, barata.transform.y)
+
+
+	love.window.setMode(1200, 800, {fullscreen = true, vsync = false})
 
 end
 
 function love.update(dt)
 	testScene:update(dt)
 	Timer.update(dt)
+	local dx,dy = barata.transform.x, barata.transform.y
+
+    camera:lookAt(math.floor(math.max(math.min(dx, map.width*map.tilewidth - (love.graphics.getWidth()*1/camera.scale)/2), (love.graphics.getWidth()*1/camera.scale)/2)),
+    			math.floor(math.max(math.min(dy, map.height*map.tileheight - (love.graphics.getHeight()*1/camera.scale)/2), (love.graphics.getHeight()*1/camera.scale)/2)))
+    local cx, cy = camera:position()
+    pprint(cx..", "..math.abs(math.max(math.min(dx, map.width*map.tilewidth - love.graphics.getWidth()/2), love.graphics.getWidth()/2)))
+    pprint(cy)
 end
 
-function love:draw()
-	love.graphics.setColor(255,255,255)
-	--love.graphics.draw(menuBgBatch, 0, 0, 0)
+function love.draw()
+	camera:attach()
 	testScene:draw()
 
+	bumpdebug.draw(physics)
+	camera:detach()
 	GameMgr.draw()
 
-	--bumpdebug.draw(physics)
 	pprintDraw()
 end
 
@@ -101,6 +116,12 @@ function initExtraPhysics()	--Achar um lugar pra por isso
 
 	physics:addResponse("slope", slope)
 
+end
+
+function love.keypressed(key)
+	if key == "escape" then
+		love.event.quit()
+	end
 end
 
 function dist(x1, y1, x2, y2)

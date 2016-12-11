@@ -44,7 +44,7 @@ function Scene:loadMap(name)
 	if(map.backgroundcolor) then
 		love.graphics.setBackgroundColor(map.backgroundcolor)
 	end
-	love.window.setMode(map.width*map.tilewidth, map.height*map.tileheight, flags)
+	--love.window.setMode(map.width*map.tilewidth, map.height*map.tileheight, flags)
 	map.tiles = {}
 
 	for i,ts in ipairs(map.tilesets) do
@@ -161,24 +161,22 @@ function Scene:loadMap(name)
 					local obj = GameObject(v.name.."("..v.id..")", {Renderer(map.tilesets[getTileSet(v.gid)].texture)})
 					obj.renderer.quad = map.tiles[v.gid]
 					v.rad = math.rad(v.rotation)
-					if(v.properties.obstacle) then
-						local cW, cH, cX, cY = v.width, v.height, 0, 0
-						if(v.rotation == 90) then
-							cX = -v.height
-							cW = v.height
-							cH = v.width
-						end
-						if(v.rotation == 180) then
-							cX = -v.width
-							cY = -v.height
-						end
-						if(v.rotation == 270) then
-							cY = -v.width
-							cW = v.height
-							cH = v.width
-						end
-						obj:addComponent(BoxCollider(cW, cH, cX, cY))
+					local cW, cH, cX, cY = v.width, v.height, 0, 0
+					if(v.rotation == 90) then
+						cX = -v.height
+						cW = v.height
+						cH = v.width
 					end
+					if(v.rotation == 180) then
+						cX = -v.width
+						cY = -v.height
+					end
+					if(v.rotation == 270) then
+						cY = -v.width
+						cW = v.height
+						cH = v.width
+					end
+					obj:addComponent(BoxCollider(cW*0.9, cH*0.9, cX + cW*0.05, cY + cH * 0.05))
 					self:addGO(obj:newInstance({x = v.x, y = v.y, o = v.rad}))
 				end
 			end
@@ -218,6 +216,7 @@ function Scene:loadMap(name)
 			end
 		end
 	end
+	return map
 end
 
 setmetatable(Scene, {__call = function(_, ...) return new(...) end})

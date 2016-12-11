@@ -16,14 +16,14 @@ local function new()
 	cm.isAlive = true
 	cm.maxLife = 3
 	cm.life = cm.maxLife
-	cm.maxSpeed = 375
-	cm.accSpeed = 200
-	cm.turnSpeed = 5
+	cm.maxSpeed = 475
+	cm.accSpeed = 300
+	cm.turnSpeed = 8
 
 	cm.fwdSpeed = 0
 	cm.speedX = 0
 	cm.speedY = 0
-
+	cm.isMoving = false
 	return cm
 end
 
@@ -66,8 +66,10 @@ function CharacterMotor:update(dt)
 	end
 	
 	self.go.transform:translate(nX, nY)
-
-	self.fwdSpeed = self.fwdSpeed * 0.5
+	if not self.isMoving then
+		self.fwdSpeed = self.fwdSpeed * 0.5
+	end
+	self.isMoving = false
 	if(self.fwdSpeed<10)then
 		self.fwdSpeed = 0
 		self.go.animator:setAnim("idle")
@@ -83,11 +85,14 @@ function CharacterMotor:update(dt)
 end
 
 function CharacterMotor:draw()
+	if not self.isAlive then
+		return
+	end
 	for i=1,self.maxLife do
 		if i <= self.life then
-			love.graphics.draw(barataTex, 10 + ((i-1) * barataTex:getWidth()+10), 10)
+			love.graphics.draw(barataTex, camera:worldCoords(10 + ((i-1) * barataTex:getWidth()+10), 10))
 		else
-			love.graphics.draw(barataOutlineTex, 10 + ((i-1) * barataTex:getWidth()+10), 10)
+			love.graphics.draw(barataOutlineTex, camera:worldCoords(10 + ((i-1) * barataTex:getWidth()+10), 10))
 		end
 	end
 end
@@ -103,6 +108,7 @@ function CharacterMotor:move(dir)
 	if not self.isAlive then
 		return
 	end
+	self.isMoving = true
 	self.fwdSpeed = math.min(self.fwdSpeed + (dir * self.accSpeed), self.maxSpeed)
 end
 
@@ -112,6 +118,7 @@ function CharacterMotor:die()
 		self.go.animator:setAnim("die")
 		self.go.particle:stop()
 		self.isAlive = false
+		--Timer.tween(3, camera, {scale = 10}, "in-out-quad") --Zoom dramático
 	end
 end
 

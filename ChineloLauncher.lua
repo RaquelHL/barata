@@ -11,14 +11,14 @@ local function new(...)
 	cl.isChineloLauncher = true
 	cl.name = "chineloLauncher"
 
-	cl.freq = 0.8
+	cl.freq = 0.2
 	cl.lastChinelo = love.timer.getTime()
 
 	return cl
 end
 
 function ChineloLauncher:init()
-	self.chineloGO = GameObject("chinelo", {Renderer(chineloTex), BoxCollider(30,30), ChineloIA()})
+	self.chineloGO = GameObject("chinelo", {Renderer(chineloTex), BoxCollider(10,10), ChineloIA()})
 end
 
 function ChineloLauncher:update(dt)
@@ -34,20 +34,20 @@ function ChineloLauncher:newChinelo()
 	local y = 0
 	local o = 1.57
 	if r == 0 then
-		x = love.math.random() * love.graphics.getWidth()
+		x = love.math.random() * map.width*map.tilewidth
 		y = 0
 		o = love.math.random() * math.pi + 1.57
 		else if r == 1 then
-			x = love.graphics.getWidth()
-			y = love.math.random() * love.graphics.getHeight()
+			x = map.width*map.tilewidth
+			y = love.math.random() * map.height*map.tileheight
 			o = love.math.random() * math.pi + math.pi
 			else if r == 2 then
-				x = love.math.random() * love.graphics.getWidth()
-				y = love.graphics.getHeight()
+				x = love.math.random() * map.width*map.tilewidth
+				y = map.height*map.tileheight
 				o = love.math.random() * math.pi - 1.57
 				else if r == 3 then
 					x = 0
-					y = love.math.random() * love.graphics.getHeight()
+					y = love.math.random() * map.height*map.tileheight
 					o = love.math.random() * math.pi
 				end
 			end

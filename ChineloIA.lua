@@ -11,7 +11,7 @@ local function new()
 	cia.isChineloIA = true
 	cia.name = "enemy"
 
-	cia.speed = 300
+	cia.speed = 400
 
 	return cia
 end
@@ -45,6 +45,10 @@ function ChineloIA:update(dt)
 	end
 	
 	self.go.transform:translate(nX, nY)
+	if self.go.transform.x < -10 or self.go.transform.x > map.width*map.tilewidth + 1 
+		or self.go.transform.y < -10 or self.go.transform.y > map.height*map.tileheight + 1 then
+		self.go:destroy()
+	end
 end
 
 function ChineloIA:clone()
