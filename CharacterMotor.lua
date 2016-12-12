@@ -55,14 +55,14 @@ function CharacterMotor:update(dt)
 			eating = true
 			if(v.other.food:eat(dt)) then
 			 	GameMgr.addScore(10)
-			 end
+			end
 		end
 	end
 
 	if(eating) then
-		self.go.particle:start()
+		--self.go.particle:start()
 	else
-		self.go.particle:stop()
+		--self.go.particle:stop()
 	end
 	
 	self.go.transform:translate(nX, nY)
@@ -114,9 +114,9 @@ end
 
 function CharacterMotor:die()
 	self.life = self.life - 1
+	self.go.particle:start()
 	if self.life <= 0 then
 		self.go.animator:setAnim("die")
-		self.go.particle:stop()
 		self.isAlive = false
 		--Timer.tween(3, camera, {scale = 10}, "in-out-quad") --Zoom dramático
 	end

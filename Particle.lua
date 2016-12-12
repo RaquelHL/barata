@@ -7,7 +7,7 @@
 Particle = {}
 Particle.__index = Particle
 
-local function new(tex)
+local function new(tex, offsetX, offsetY)
 	-- Img é a textura a ser usada e buffer é o número de partículas permitido para existir simultaneamente
 	local part = {}
 	setmetatable(part, Particle)	--Faz com que part tenha todas as funções declaradas em Particle
@@ -16,6 +16,8 @@ local function new(tex)
 	part.name = "particle"
 	part.texture = tex
 	part.ParticleSystem = love.graphics.newParticleSystem(tex, 100)
+	part.offsetX = offsetX or 0
+	part.offsetY = offsetY or 0
 	
 	-- Configurações padrão de partículas
 	part.ParticleSystem:setParticleLifetime(1,2) -- Partículas existirão por 2 a 5 segundos
@@ -36,7 +38,7 @@ function Particle:update(dt)
 end
 
 function Particle:draw()
-	love.graphics.draw(self.ParticleSystem, self.go.transform.x, self.go.transform.y)
+	love.graphics.draw(self.ParticleSystem, self.go.transform.x + self.offsetX, self.go.transform.y + self.offsetY)
 end
 
 function Particle:start()
@@ -48,7 +50,7 @@ function Particle:stop()
 end
 
 function Particle:clone()
-	return new(self.texture)
+	return new(self.texture, self.offsetX, self.offsetY)
 end
 
 setmetatable(Particle, {__call = function(_, ...) return new(...) end})

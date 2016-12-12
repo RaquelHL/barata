@@ -181,27 +181,37 @@ function Scene:loadMap(name)
 				end
 			end
 			if(l.name == "player") then
-				barata = GameObject("barata", {Renderer(), SpriteAnimator("walk"), BoxCollider(24,24), CharacterMotor(), PlayerInput(), Particle(foodParticle)}):newInstance({x = l.objects[1].x, y = l.objects[1].y, sx = 0.5, sy = 0.5})
+				barata = GameObject("barata", {Renderer(), SpriteAnimator("walk"), BoxCollider(24,24), CharacterMotor(), PlayerInput(), Particle(foodParticle, 16, 16)}):newInstance({x = l.objects[1].x, y = l.objects[1].y, sx = 0.5, sy = 0.5})
 
 				barata.renderer.offsetX = 12
 				barata.renderer.offsetY = 12
 				barata.renderer.offsetOX = 32
 				barata.renderer.offsetOY = 32
 				
+				barata.particle.ParticleSystem:setColors(255,0,0, 255, 255, 0, 0, 0)
+				barata.particle.ParticleSystem:setEmitterLifetime(0.5)
+				barata.particle.ParticleSystem:setAreaSpread("normal", 2, 2)
+
+				barata.particle:stop()
+
 				GameMgr.init(barata)
 
 				self:addGO(barata)
 			end
 			if(l.name == "food") then
-				local pizza = GameObject("pizza", {Renderer(), SpriteAnimator("pizza"), BoxCollider(88, 114, -10, -20), Food(3)})
-				local maca = GameObject("maca", {Renderer(), SpriteAnimator("maca"), BoxCollider(60, 87, -15, -20), Food(2)})
+				local pizza = GameObject("pizza", {Renderer(), SpriteAnimator("pizza"), BoxCollider(88, 114, -10, -20), Food(3), Particle(foodParticle, 29, 37)})
+				local maca = GameObject("maca", {Renderer(), SpriteAnimator("maca"), BoxCollider(60, 87, -15, -20), Food(2), Particle(foodParticle, 15, 22)})
 
 				for k,v in pairs(l.objects) do
 					if (map.tilesets[getTileSet(v.gid)].name == "pizza") then
-						self:addGO(pizza:newInstance({x = v.x, y = v.y}))		
+						local pizzaI = pizza:newInstance({x = v.x, y = v.y})
+						self:addGO(pizzaI)		
+						pizzaI.particle.ParticleSystem:setAreaSpread("normal", 10, 10)
 					else 
 						if(map.tilesets[getTileSet(v.gid)].name == "maca") then
-							self:addGO(maca:newInstance({x = v.x, y = v.y}))			
+							local macaI = maca:newInstance({x = v.x, y = v.y})
+							self:addGO(macaI)
+							macaI.particle.ParticleSystem:setAreaSpread("normal", 10, 10)
 						end
 					end
 				end
