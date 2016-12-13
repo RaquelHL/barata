@@ -118,6 +118,8 @@ function CharacterMotor:die()
 	if self.life <= 0 then
 		self.go.animator:setAnim("die")
 		self.isAlive = false
+		gameover = true
+		lblScore2.text = "Score: "..score
 		--Timer.tween(3, camera, {scale = 10}, "in-out-quad") --Zoom dramático
 	end
 end

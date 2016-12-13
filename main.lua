@@ -37,7 +37,8 @@ function love.load()
 	initResources()	
 
 	GUI = gui()
-	font = love.graphics.getFont()
+	
+	font = love.graphics.newFont("font/courbd.ttf", 24)
     GUI:newPanelType("button", buttonTex, 4, 56)
 
 	love.window.setMode(1200, 800, {fullscreen = true, vsync = false})

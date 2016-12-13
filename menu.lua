@@ -1,4 +1,3 @@
-
 menu = {}
 
 function menu:init()
@@ -18,12 +17,12 @@ function menu:init()
         end
     end
 
-    pnMenu = GUI:Frame({y = 80, h = 384, padding = 16, layout = "boxV"})
+    pnMenu = GUI:Frame({x = love.graphics.getWidth()/2-150, y = love.graphics.getHeight()/2-300, w = 300, h = 400, padding = 16, layout = "boxV", panelType = "button", color = Color(200,200,200,100)})
 
-    pnMenu:addChild(GUI:Label({text = "Barata"}))
+    pnMenu:addChild(GUI:Label({text = "Barata", color = Color(0)}))
     
-    pnMenu:addChild(GUI:Button({text = "Jogar", w = 224, h = 64, callback = btJogarClick, color = Color(50, 50, 200), hoverColor = Color(80, 80, 250)}))
-    pnMenu:addChild(GUI:Button({text = "Sair", w = 224, h = 64, callback = btSairClick, color = Color(50, 50, 200), hoverColor = Color(80, 80, 250)}))
+    pnMenu:addChild(GUI:Button({text = "Play", w = 224, h = 64, callback = btJogarClick, color = Color(50, 50, 200), hoverColor = Color(80, 80, 250)}))
+    pnMenu:addChild(GUI:Button({text = "Exit", w = 224, h = 64, callback = btSairClick, color = Color(50, 50, 200), hoverColor = Color(80, 80, 250)}))
 end
 
 function btJogarClick(b)
@@ -46,12 +45,8 @@ function menu:mousepressed(x,y,b)
     GUI:mousepressed(pnMenu, x, y, b)
 end
 
-function menu:textinput(t)
-    GUI:textinput(t)
-end
 
 function menu:keypressed(k)
-	GUI:keypressed(k)
     if(k=="return") then
         Gamestate.switch(game)
 	end

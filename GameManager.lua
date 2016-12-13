@@ -1,11 +1,11 @@
 local GameManager = {}
 
-local score = 0
+score = 0
 local barata = nil
 
 function GameManager.init(b)
-	frScore = GUI:Frame({x = love.graphics.getWidth()-100, w = 100, h = 50, padding = 8, layout = "boxV", childHalign = "left"})
-	lblScore = GUI:Label({text = "Score: "})
+	frScore = GUI:Frame({x = love.graphics.getWidth()-200, w = 200, h = 50, padding = 8, layout = "boxV", childHalign = "left"})
+	lblScore = GUI:Label({text = "Score: ", color = Color(0)})
 	frScore:addChild(lblScore)
 	barata = b
 end

@@ -4,7 +4,7 @@ local bumpdebug = require("lib.bump_debug")
 
 game = {}
 
-function game:init()
+function game:enter()
 	physics = bump.newWorld(168)	--Tem que colocar isso em algum outro lugar	
 	chinelo = GameObject("c", {ChineloLauncher()})
 
@@ -16,6 +16,19 @@ function game:init()
 
 	camera = Camera(barata.transform.x, barata.transform.y)
 
+	gameover = false
+
+	frGameover = GUI:Frame({x = love.graphics.getWidth()/2 - 150, y = love.graphics.getHeight()/2 - 200, w = 300, h =400, panelType = "button", color = Color(200), layout = "boxV", childHalign = "center"})
+	frGameover:addChild(GUI:Label({text = "Game Over", color = Color(0)}))
+	lblScore2 = GUI:Label({text = "Score:        "..score, color = Color(0)})
+	frGameover:addChild(lblScore2)
+
+	frGameover:addChild(GUI:Button({text ="Try again", callback = function()
+		score = 0
+		Gamestate.switch(game)
+	end}))
+
+    
 end
 
 function game:update(dt)
@@ -34,5 +47,15 @@ function game:draw()
 	--bumpdebug.draw(physics)
 	camera:detach()
 	GameMgr.draw()
-	pprintDraw()
+
+	if gameover then
+		GUI:draw(frGameover)
+	end
+
+	--pprintDraw()
+end
+
+
+function game:mousepressed(x,y,b)
+    GUI:mousepressed(frGameover, x, y, b)
 end
